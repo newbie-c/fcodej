@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title%}Сначала{% endblock title -%}
+
+{% block styles %}
+  {{ super() }}
+  {% assets filters='cssmin', output='generic/css/main/index.css',
+            'css/base.css',
+            'css/main/index.css' %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+  {% endassets %}
+{% endblock styles %}
+
+{% block scripts %}
+  {{ super() }}
+  {% assets filters='rjsmin', output='generic/js/main/index.js',
+            'js/main/index.js' %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock scripts %}
