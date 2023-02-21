@@ -1,9 +1,13 @@
 $(function() {
+  let dt = luxon.DateTime.now();
   let cur = {
-    year: luxon.DateTime.now().year
+    year: dt.year
   };
-  let template = $('#baset').html();
-  let html = Mustache.render(template, cur);
+  let html = Mustache.render($('#baset').html(), cur);
   $('body').append(html);
-  console.log($('#main-container'));
+  checkMC(800);
+  $('body').on('click', '.close-top-flashed', closeTopFlashed);
+  let content = Mustache.render($('#indext').html(), cur);
+  $('#main-container').append(content);
+  if ($('.today-field').length) renderTF('.today-field', dt);
 });

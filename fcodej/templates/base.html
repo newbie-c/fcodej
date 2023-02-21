@@ -25,8 +25,6 @@
     {% endblock styles %}
 
     {% block templates %}
-      {% raw %}
-        <!-- -->
         <script id="baset" type="text/template">
 <nav id="navigation" class="navbar navbar-default">
   <div class="container-fluid">
@@ -75,7 +73,22 @@
     </div>
   </div>
 </nav>
-<div id="main-container"></div>
+<div id="main-container">
+  {% if flashed %}
+    <div class="top-flashed-block">
+      {% for message in flashed %}
+        <div class="flashed-message
+                    {% if not loop.first %}next-block{% endif %}">
+          <div class="alert alert-warning">
+            <button class="close close-top-flashed" type="button">
+              &times;</button>
+            {{ message|safe }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
 <footer id="footer">
   <div class="container-fluid">
     <div class="footer-block"></div>
@@ -88,7 +101,7 @@
       <div class="footer-center text-center">
         <a id="footer-link"
            href="/">
-          <span class="footer-link-text">Блоги CodeJ, {{ year }} г.
+          <span class="footer-link-text">Блоги CodeJ, <% year %> г.
           </span>
         </a>
       </div>
@@ -103,7 +116,6 @@
   </div>
 </footer>
         </script>
-      {% endraw %}
     {% endblock templates %}
   </head>
   <body>
@@ -113,7 +125,8 @@
                 'vendor/jquery-3.6.3.js',
                 'vendor/bootstrap/js/bootstrap.js',
                 'vendor/mustache.js',
-                'vendor/luxon.js' %}
+                'vendor/luxon.js',
+                'js/custom.js' %}
         <script src="{{ ASSET_URL }}"></script>
       {% endassets %}
     {% endblock scripts %}
