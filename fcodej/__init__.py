@@ -13,6 +13,7 @@ from starlette.templating import Jinja2Templates
 from webassets import Environment as AssetsEnvironment
 from webassets.ext.jinja2 import assets
 
+from .auth.attri import groups, permissions
 from .captcha.views import show_captcha
 from .main.views import show_index, show_favicon
 
@@ -37,6 +38,8 @@ class J2Templates(Jinja2Templates):
             loader=loader, autoescape=True, extensions=[assets])
         env.assets_environment = assets_env
         env.globals["url_for"] = url_for
+        env.globals["permissions"] = permissions
+        env.globals["groups"] = groups
         return env
 
 middleware = [
