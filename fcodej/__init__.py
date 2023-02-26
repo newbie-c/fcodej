@@ -3,6 +3,7 @@ import os
 import jinja2
 import typing
 
+from redis import asyncio as aioredis
 from starlette.applications import Starlette
 from starlette.config import Config
 from starlette.middleware import Middleware
@@ -10,9 +11,11 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
+from starlette_csrf import CSRFMiddleware
 from webassets import Environment as AssetsEnvironment
 from webassets.ext.jinja2 import assets
 
+from .api.main import IndexPage
 from .ava.views import show_avatar
 from .auth.attri import groups, permissions
 from .captcha.views import show_captcha
@@ -47,12 +50,18 @@ middleware = [
     Middleware(
         SessionMiddleware,
         secret_key=settings.get('SECRET_KEY'),
-        max_age=settings.get('SESSION_LIFETIME', cast=int))]
+        max_age=settings.get('SESSION_LIFETIME', cast=int)),
+    Middleware(
+        CSRFMiddleware,
+        secret=settings.get('SECRET_KEY'),
+        cookie_samesite='lax')]
 
 app = Starlette(
     debug=settings.get('DEBUG', cast=bool),
     routes=[Route('/', show_index, name='index'),
             Route('/favicon.ico', show_favicon, name='favicon'),
+            Mount('/api', name='api', routes=[
+                Route('/index', IndexPage)]),
             Mount('/ava', name='ava', routes=[
                 Route('/{hash}/{size:int}', show_avatar, name='avatar')]),
             Mount('/captcha', name='captcha', routes=[
@@ -62,3 +71,4 @@ app = Starlette(
     middleware=middleware)
 app.config = settings
 app.jinja = J2Templates(directory=templates)
+app.rc = aioredis.from_url(settings.get('REDI'), decode_responses=True)
