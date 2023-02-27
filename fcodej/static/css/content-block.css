@@ -1,0 +1,11 @@
+.content-block {
+  border-radius: 3px;
+  border: 1px solid #d3d3d3;
+  box-shadow: 0 0 8px #d3d3d3;
+  padding: 8px;
+}
+
+.content-block h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.3em;
+}

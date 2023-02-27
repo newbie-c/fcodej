@@ -62,7 +62,7 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-              <a href="/">Войти</a>
+              <a id="login" href="/#login">Войти</a>
             </li>
             <li>
               <a href="/">Получить пароль</a>
@@ -132,7 +132,92 @@
       без повторов.
     </p>
   </div>
-  <div class="form-form"></div>
+  <div class="form-form">
+    <div class="form-group">
+      <div class="form-label text-right">
+        <label for="logininput">Логин:</label>
+      </div>
+      <div class="form-input">
+        <input class="form-control"
+               id="logininput"
+               name="logininput"
+               placeholder="введите свой логин"
+               required
+               type="text">
+      </div>
+      <div class="footer-bottom"></div>
+    </div>
+    <div class="form-group">
+      <div class="form-label text-right">
+        <label for="password">Пароль:</label>
+      </div>
+      <div class="form-input">
+        <input class="form-control"
+               id="password"
+               name="password"
+               placeholder="введите свой пароль"
+               required
+               type="password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-input checkbox">
+        <label>
+          <input id="remember_me"
+                 name="remember_me"
+                 type="checkbox">
+          <label for="remember_me">
+            Хранить сессию 30 дней
+          </label>
+        </label
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label captcha-options text-right">
+        <button type="button"
+                title="обновить картику"
+                class="btn btn-default reload-captcha">
+          <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="form-input captcha-field"
+           style="background:url(<% url %>)"></div>
+      <div class="footer-bottom"></div>
+    </div>
+    <div class="form-group">
+      <div class="form-label text-right">
+        <label for="captcha">Код с картинки:</label>
+      </div>
+      <div class="form-input">
+        <input class="form-control"
+               id="captcha"
+               placeholder="введите код с картинки"
+               required
+               type="text">
+      </div>
+      <div class="footer-bottom"></div>
+    </div>
+    <div class="form-group hidden">
+      <div class="form-input">
+        <input class="form-control"
+               id="suffix"
+               required
+               type="text"
+               value="<% captcha %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-input">
+        <button type="button"
+                class="btn btn-primary"
+                id="login-submit"
+                name="login-submit">Войти в сервис</button>
+        <button type="button"
+                class="btn btn-info"
+                id="login-reg">Получить пароль</button>
+      </div>
+    </div>
+  </div>
 </div>
         </script>
         {% endif %}
