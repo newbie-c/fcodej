@@ -169,18 +169,19 @@
           <label for="remember_me">
             Хранить сессию 30 дней
           </label>
-        </label
+        </label>
       </div>
     </div>
     <div class="form-group">
       <div class="form-label captcha-options text-right">
         <button type="button"
                 title="обновить картику"
-                class="btn btn-default reload-captcha">
+                id="lcaptcha-reload"
+                class="btn btn-default">
           <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
         </button>
       </div>
-      <div class="form-input captcha-field"
+      <div id="lcaptcha-field" class="form-input captcha-field"
            style="background:url(<% url %>)"></div>
       <div class="footer-bottom"></div>
     </div>
@@ -190,7 +191,7 @@
       </div>
       <div class="form-input">
         <input class="form-control"
-               id="captcha"
+               id="lcaptcha"
                placeholder="введите код с картинки"
                required
                type="text">
@@ -200,7 +201,7 @@
     <div class="form-group hidden">
       <div class="form-input">
         <input class="form-control"
-               id="suffix"
+               id="lsuffix"
                required
                type="text"
                value="<% captcha %>">

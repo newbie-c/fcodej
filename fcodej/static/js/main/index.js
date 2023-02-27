@@ -19,13 +19,25 @@ $(function() {
     },
     dataType: 'json'
   });
+  $('body').on('click', '#lcaptcha-reload', function() {
+    $(this).blur();
+    $.ajax({
+      method: 'GET',
+      url: '/api/captcha',
+      success: function(data) {
+        $('#lcaptcha-field').attr({"style": 'background:url(' + data.url +')'});
+        $('#lsuffix').val(data.captcha);
+        $('#lcaptcha').focus();
+      },
+      dataType: 'json'
+    });
+  });
   $('body').on('click', '#login', function() {
     if (!$('#loginf').length) {
       $.ajax({
         method: 'GET',
         url: '/api/captcha',
         success: function(data) {
-          console.log(data);
           let form = Mustache.render($('#logint').html(), data);
           $('#main-container').append(form);
           $('#main-container .alert').slideUp('fast');
