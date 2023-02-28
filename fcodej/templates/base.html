@@ -65,7 +65,7 @@
               <a id="login" href="/#login">Войти</a>
             </li>
             <li>
-              <a href="/">Получить пароль</a>
+              <a id="reg" href="/#get-password">Получить пароль</a>
             </li>
           </ul>
         </li>
@@ -187,7 +187,7 @@
     </div>
     <div class="form-group">
       <div class="form-label text-right">
-        <label for="captcha">Код с картинки:</label>
+        <label for="lcaptcha">Код с картинки:</label>
       </div>
       <div class="form-input">
         <input class="form-control"
@@ -216,6 +216,86 @@
         <button type="button"
                 class="btn btn-info"
                 id="login-reg">Получить пароль</button>
+      </div>
+    </div>
+  </div>
+</div>
+        </script>
+        <script id="regt" type="text/template">
+<div id="regf" class="form-block content-block">
+  <h3>Запрос регистрации</h3>
+  <div class="today-field"></div>
+  <div class="form-help">
+    <p>
+      Уважаемый гость, получить пароль можно, заполнив форму ниже,
+      в ней нужно ввести с соответствующие поля Ваш адрес электронной
+      почты и код с картинки, а затем нажать кнопку "Получить пароль"ю
+      На Ваш адрес будет выслано письмо с дальнейшими инструкциями,
+      следуйте им. Форма действительна в течение 3-минут с момента
+      загрузки этой страницы, или с момента обновления картинки с кодом.
+      Если картинка с кодом плохо читается, её можно обновить кнопкой
+      со стрелками слева от картинки. <b>Для справки:</b> код на картинке
+      состоит из строчных латинских букв и цифр без повторов, будьте
+      внимательны, очень легко суптать букву "о" и цифру "0".
+    </p>
+  </div>
+  <div class="form-form">
+    <div class="form-group">
+      <div class="form-label text-right">
+        <label for="raddress">Адрес эл.почты:</label>
+      </div>
+      <div class="form-input">
+        <input class="form-control"
+               id="raddress"
+               maxlength="128"
+               name="raddress"
+               placeholder="введите свой адрес эл.почты"
+               required
+               type="text">
+      </div>
+      <div class="footer-bottom"></div>
+    </div>
+    <div class="form-group">
+      <div class="form-label captcha-options text-right">
+        <button type="button"
+                title="обновить картинку"
+                id="rcaptcha-reload"
+                class="btn btn-default">
+          <span class="glyphicon glyphicon-refresh"
+                aria-hidden="true"></span>
+        </button>
+      </div>
+      <div id="rcaptcha-field" class="form-input captcha-field"
+           style="background:url(<% url %>)"></div>
+      <div class="footer-bottom"></div>
+    </div>
+    <div class="form-group">
+      <div class="form-label text-right">
+        <label for="rcaptcha">Код с картинки:</label>
+      </div>
+      <div class="form-input">
+        <input class="form-control"
+               id="rcaptcha"
+               placeholder="введите код с картинки"
+               required
+               type="text">
+      </div>
+      <div class="footer-bottom"></div>
+    </div>
+    <div class="form-group hidden">
+      <div class="form-input">
+        <input class="form-control"
+               id="rsuffix"
+               required
+               type="text"
+               value="<% captcha %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-input">
+        <button type="button"
+                class="btn btn-primary"
+                id="reg-submit">Получить пароль</button>
       </div>
     </div>
   </div>
