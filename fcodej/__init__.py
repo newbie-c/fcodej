@@ -11,12 +11,10 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
-from starlette_csrf import CSRFMiddleware
 from webassets import Environment as AssetsEnvironment
 from webassets.ext.jinja2 import assets
 
-from .api.main import IndexPage
-from .api.main import Captcha
+from .api.main import Captcha, IndexPage, Login
 from .ava.views import show_avatar
 from .auth.attri import groups, permissions
 from .captcha.views import show_captcha
@@ -51,11 +49,7 @@ middleware = [
     Middleware(
         SessionMiddleware,
         secret_key=settings.get('SECRET_KEY'),
-        max_age=settings.get('SESSION_LIFETIME', cast=int)),
-    Middleware(
-        CSRFMiddleware,
-        secret=settings.get('SECRET_KEY'),
-        cookie_samesite='lax')]
+        max_age=settings.get('SESSION_LIFETIME', cast=int))]
 
 app = Starlette(
     debug=settings.get('DEBUG', cast=bool),
@@ -63,7 +57,8 @@ app = Starlette(
             Route('/favicon.ico', show_favicon, name='favicon'),
             Mount('/api', name='api', routes=[
                 Route('/index', IndexPage, name='aindex'),
-                Route('/captcha', Captcha, name='acaptcha')]),
+                Route('/captcha', Captcha, name='acaptcha'),
+                Route('/login', Login, name='alogin')]),
             Mount('/ava', name='ava', routes=[
                 Route('/{hash}/{size:int}', show_avatar, name='avatar')]),
             Mount('/captcha', name='captcha', routes=[

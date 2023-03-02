@@ -1,8 +1,8 @@
 from jwt import PyJWTError, decode
 
 
-async def checkcu(request):
-    token, cache, res = request.query_params.get('token'), None, None
+async def checkcu(request, token):
+    cache, res = None, None
     if token:
         try:
             cache = decode(
