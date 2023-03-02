@@ -6,6 +6,11 @@ $(function() {
     url: '/api/index',
     data: tee,
     success: function(data) {
+      console.log(data);
+      if (!data.cu && token) {
+        window.localStorage.removeItem('token');
+        window.location.reload();
+      }
       let dt = luxon.DateTime.now();
       data.year = dt.year;
       let html = Mustache.render($('#baset').html(), data);

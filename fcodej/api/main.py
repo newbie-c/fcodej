@@ -10,7 +10,7 @@ from ..common.flashed import set_flashed
 from ..common.pg import get_conn
 from .pg import filter_user
 from .redi import assign_cache, assign_uid, extract_cache
-from .tasks import change_pattern, ping_user, rem_old_session
+from .tasks import change_pattern, rem_old_session
 from .tokens import create_login_token
 
 
@@ -44,8 +44,6 @@ class Login(HTTPEndpoint):
             d = await assign_uid(request.app.rc, 'uid:', rme, user)
             res['token'] = await create_login_token(request, rme, d)
             await set_flashed(request, f'Привет, {user.get("username")}!')
-            asyncio.ensure_future(
-                ping_user(request.app.config, user.get('id')))
             asyncio.ensure_future(
                 change_pattern(request.app.config, suffix))
             if rme:

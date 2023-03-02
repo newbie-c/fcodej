@@ -57,3 +57,27 @@ initials = {permissions.READ_JOURNAL: True,
 
 roots = [permission for permission in permissions
          if permission != permissions.CANNOT_LOG_IN]
+
+
+async def get_group(perms):
+    if permissions.ADMINISTER_SERVICE in perms:
+        return groups.root
+    if permissions.CREATE_ENTITY in perms \
+            and permissions.UPLOAD_PICTURES in perms \
+            and permissions.MAKE_ANNOUNCEMENT in perms \
+            and permissions.CHANGE_USER_ROLE in perms:
+        return groups.keeper
+    if permissions.BLOCK_ENTITY in perms:
+        return groups.curator
+    if permissions.CREATE_ENTITY in perms \
+            or permissions.MAKE_ANNOUNCEMENT in perms \
+            or permissions.UPLOAD_PICTURES in perms:
+        return groups.blogger
+    if permissions.LIKE_DISLIKE in perms \
+            or permissions.WRITE_COMMENTARY in perms \
+            or permissions.SEND_PM in perms:
+        return groups.commentator
+    if permissions.READ_JOURNAL in perms:
+        return groups.taciturn
+    if permissions.CANNOT_LOG_IN in perms:
+        return groups.pariah
