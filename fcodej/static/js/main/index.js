@@ -1,17 +1,18 @@
 $(function() {
   let token = window.localStorage.getItem('token');
-  let tee = token ? {token: token} : {};
+  //let tee = token ? {token: token} : {};
   $.ajax({
-    method: 'GET',
+    method: 'POST',
     url: '/api/index',
-    data: tee,
+    data: {
+      token: token
+    },
     success: function(data) {
       if (!data.cu && token) {
         window.localStorage.removeItem('token');
         window.location.reload();
       }
       data.menu = adjustMenu(data);
-      console.log(data);
       let dt = luxon.DateTime.now();
       data.year = dt.year;
       let html = Mustache.render($('#baset').html(), data);
@@ -24,7 +25,23 @@ $(function() {
     },
     dataType: 'json'
   });
-  if (!token) {
+  if (token) {
+    $('body').on('click', '#logout', function() {
+      let tee = {token: token};
+      $.ajax({
+        method: 'POST',
+        url: '/api/logout',
+        data: tee,
+        success: function(data) {
+          if (data.result) {
+            window.localStorage.removeItem('token');
+            $('.navbar-brand')[0].click();
+          }
+        },
+        dataType: 'json'
+      });
+    });
+  } else {
     $('body').on('click', '#rcaptcha-reload', function() {
       $(this).blur();
       $.ajax({

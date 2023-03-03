@@ -11,7 +11,7 @@ from ..common.pg import get_conn
 from .pg import filter_user
 from .redi import assign_cache, assign_uid, extract_cache
 from .tasks import change_pattern, rem_old_session
-from .tokens import create_login_token
+from .tokens import check_token, create_login_token
 
 
 class Login(HTTPEndpoint):
@@ -50,7 +50,6 @@ class Login(HTTPEndpoint):
                 asyncio.ensure_future(
                     rem_old_session(
                         request, d, user.get('username')))
-                pass
         else:
             await set_flashed(
                 request, 'Неверный логин или пароль, вход невозможен.')
@@ -58,12 +57,30 @@ class Login(HTTPEndpoint):
         return JSONResponse(res)
 
 
+class Logout(HTTPEndpoint):
+    async def post(self, request):
+        res = {'result': None}
+        token = (await request.form()).get('token')
+        if token:
+            cache = await check_token(request.app.config, token)
+            if cache:
+                uid = await request.app.rc.get(cache.get('cache'))
+                cu = await checkcu(request, token)
+                if cu.get('id') == int(uid):
+                    await request.app.rc.delete(cache.get('cache'))
+                    res['result'] = True
+                    await set_flashed(request, f'Пока, {cu.get("username")}!')
+        return JSONResponse(res)
+
+
 class IndexPage(HTTPEndpoint):
-    async def get(self, request):
-        res = {'cu': await checkcu(
-            request, request.query_params.get('token'))}
-        if res.get('cu'):
-            res['permissions'] = {name: permission for name, permission
+    async def post(self, request):
+        res = {'cu': None}
+        token = (await request.form()).get('token')
+        if token:
+            res['cu'] = await checkcu(request, token)
+            if res.get('cu'):
+                res['permissions'] = {name: permission for name, permission
                 in zip(permissions._fields, permissions)}
         return JSONResponse(res)
 
