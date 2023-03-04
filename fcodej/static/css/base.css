@@ -34,6 +34,10 @@ body {
   margin: 0;
 }
 
+.to-be-hidden {
+  display: none;
+}
+
 #footer {
   position: absolute;
   bottom: 0;

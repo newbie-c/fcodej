@@ -6,15 +6,29 @@ function reg() {
       success: function(data) {
         let form = Mustache.render($('#regt').html(), data);
         $('#main-container').append(form);
-        $('#main-container .alert').slideUp('fast');
-        $('#loginf').slideUp('slow');
+        if ($('#loginf').length) $('#loginf').slideUp('slow');
+        $('#main-container .top-flashed-block').slideUp('fast');
+        $('.idef').slideUp('fast', function() {
+          if ($('#loginf').length) {
+            $('#loginf').slideUp('fast', function() {
+              $('#regf').slideDown('slow');
+            });
+          } else {
+            $('#regf').slideDown('slow');
+          }
+        });
       },
       dataType: 'json'
     });
   } else {
     $('#rcaptcha-reload').trigger('click');
-    $('#regf').slideDown('slow');
-    if ($('#loginf').length) $('#loginf').slideUp('slow');
+    if ($('#loginf').length) {
+      $('#loginf').slideUp('fast', function() {
+        $('#regf').slideDown('slow');
+      });
+    } else {
+      $('#regf').slideDown('slow');
+    }
   }
   let col = $(this).parents('.navbar-collapse');
   if (col.hasClass('in')) col.removeClass('in');
