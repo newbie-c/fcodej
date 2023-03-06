@@ -5,6 +5,14 @@ from minify_html import minify
 
 from ..common.flashed import get_flashed, set_flashed
 
+async def create_password(request):
+    return HTMLResponse('<p>this url is temporary</p>')
+
+
+async def reset_password(request):
+    return HTMLResponse('<p>this url is temporary</p>')
+
+
 async def show_index(request):
     html = minify(
         request.app.jinja.get_template(

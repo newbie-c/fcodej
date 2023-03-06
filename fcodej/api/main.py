@@ -8,10 +8,48 @@ from ..auth.attri import permissions
 from ..auth.cu import checkcu
 from ..common.flashed import set_flashed
 from ..common.pg import get_conn
-from .pg import filter_user
+from .pg import check_address, filter_user
 from .redi import assign_cache, assign_uid, extract_cache
-from .tasks import change_pattern, rem_old_session
+from .tasks import change_pattern, rem_old_session, request_password
 from .tokens import check_token, create_login_token
+
+
+class GetPassword(HTTPEndpoint):
+    async def post(self, request):
+        d = await request.form()
+        address, cache, captcha, token = (
+            d.get('address'), d.get('cache'),
+            d.get('captcha'), d.get('token'))
+        res = {'result': 'empty'}
+        if token and await checkcu(token):
+            await set_flashed(request, 'Вы авторизованы.')
+            return JSONResponse(res)
+        if not cache:
+            await set_flashed(
+                request, 'Тест провален, либо устарел, попробуйте снова.')
+            return JSONResponse(res)
+        suffix, val = await extract_cache(request.app.rc, cache)
+        if captcha != val:
+            await set_flashed(
+                request, 'Тест провален, либо устарел, попробуйте снова.')
+            asyncio.ensure_future(
+                change_pattern(request.app.config, suffix))
+            return JSONResponse(res)
+        conn = await get_conn(request.app.config)
+        message, account = await check_address(request, conn, address)
+        await conn.close()
+        if message:
+            await set_flashed(request, message)
+            asyncio.ensure_future(
+                change_pattern(request.app.config, suffix))
+            return JSONResponse(res)
+        asyncio.ensure_future(
+            change_pattern(request.app.config, suffix))
+        asyncio.ensure_future(
+            request_password(request, account, address))
+        await set_flashed(
+            request, 'На ваш адрес выслано письмо с инструкциями.')
+        return JSONResponse(res)
 
 
 class Login(HTTPEndpoint):
@@ -23,7 +61,7 @@ class Login(HTTPEndpoint):
             d.get('captcha'), d.get('token'))
         res = {'token': None}
         if token and await checkcu(token):
-            res['message'] = 'Вы уже авторизованы.'
+            await set_flashed(request, 'Вы уже авторизованы.')
             return JSONResponse(res)
         if not cache:
             await set_flashed(

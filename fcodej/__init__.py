@@ -14,16 +14,28 @@ from starlette.templating import Jinja2Templates
 from webassets import Environment as AssetsEnvironment
 from webassets.ext.jinja2 import assets
 
-from .api.main import Captcha, IndexPage, Login, Logout
+from .api.main import Captcha, GetPassword, IndexPage, Login, Logout
 from .ava.views import show_avatar
 from .auth.attri import groups, permissions
 from .captcha.views import show_captcha
-from .main.views import show_index, show_favicon
+from .main.views import (
+    create_password, reset_password, show_index, show_favicon)
 
 base = os.path.dirname(__file__)
 static = os.path.join(base, 'static')
 templates = os.path.join(base, 'templates')
 settings = Config(os.path.join(os.path.dirname(base), '.env'))
+
+try:
+    from .addenv import SITE_NAME, SITE_DESCRIPTION, MAIL_PASSWORD
+    if SITE_NAME:
+        settings.file_values["SITE_NAME"] = SITE_NAME
+    if SITE_DESCRIPTION:
+        settings.file_values["SITE_DESCRIPTION"] = SITE_DESCRIPTION
+    if MAIL_PASSWORD:
+        settings.file_values["MAIL_PASSWORD"] = MAIL_PASSWORD
+except ModuleNotFoundError:
+    pass
 
 
 class J2Templates(Jinja2Templates):
@@ -55,11 +67,16 @@ app = Starlette(
     debug=settings.get('DEBUG', cast=bool),
     routes=[Route('/', show_index, name='index'),
             Route('/favicon.ico', show_favicon, name='favicon'),
+            Route('/create-password/{token}', create_password,
+                  name='create-password'),
+            Route('/reset-password/{token}', reset_password,
+                  name='reset-password'),
             Mount('/api', name='api', routes=[
                 Route('/index', IndexPage, name='aindex'),
                 Route('/captcha', Captcha, name='acaptcha'),
                 Route('/login', Login, name='alogin'),
-                Route('/logout', Logout, name='alogout')]),
+                Route('/logout', Logout, name='alogout'),
+                Route('/get-password', GetPassword, name='areg')]),
             Mount('/ava', name='ava', routes=[
                 Route('/{hash}/{size:int}', show_avatar, name='avatar')]),
             Mount('/captcha', name='captcha', routes=[

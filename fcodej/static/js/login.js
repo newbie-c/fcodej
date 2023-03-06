@@ -1,6 +1,6 @@
 function login() {
   if (!$('#loginf').length) {
-    $.ajax ({
+    $.ajax({
       method: 'GET',
       url: '/api/captcha',
       success: function(data) {
