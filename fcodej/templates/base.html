@@ -124,8 +124,9 @@
       <div class="footer-center text-center">
         <a id="footer-link"
            href="/">
-          <span class="footer-link-text">Блоги CodeJ, <% year %> г.
-          </span>
+          <span
+            class="footer-link-text">{{ request.app.config.get(
+                      'SITE_NAME') }}, <% year %> г.</span>
         </a>
       </div>
       <div class="footer-right text-right">

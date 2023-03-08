@@ -14,12 +14,12 @@ from starlette.templating import Jinja2Templates
 from webassets import Environment as AssetsEnvironment
 from webassets.ext.jinja2 import assets
 
-from .api.main import Captcha, GetPassword, IndexPage, Login, Logout
+from .api.auth import CreatePassword, GetPassword, Login, Logout
+from .api.main import Captcha, IndexPage
 from .ava.views import show_avatar
 from .auth.attri import groups, permissions
 from .captcha.views import show_captcha
-from .main.views import (
-    create_password, reset_password, show_index, show_favicon)
+from .main.views import show_index, show_favicon
 
 base = os.path.dirname(__file__)
 static = os.path.join(base, 'static')
@@ -67,16 +67,13 @@ app = Starlette(
     debug=settings.get('DEBUG', cast=bool),
     routes=[Route('/', show_index, name='index'),
             Route('/favicon.ico', show_favicon, name='favicon'),
-            Route('/create-password/{token}', create_password,
-                  name='create-password'),
-            Route('/reset-password/{token}', reset_password,
-                  name='reset-password'),
             Mount('/api', name='api', routes=[
                 Route('/index', IndexPage, name='aindex'),
                 Route('/captcha', Captcha, name='acaptcha'),
                 Route('/login', Login, name='alogin'),
                 Route('/logout', Logout, name='alogout'),
-                Route('/get-password', GetPassword, name='areg')]),
+                Route('/get-password', GetPassword, name='areg'),
+                Route('/create-password', CreatePassword, name='crp')]),
             Mount('/ava', name='ava', routes=[
                 Route('/{hash}/{size:int}', show_avatar, name='avatar')]),
             Mount('/captcha', name='captcha', routes=[

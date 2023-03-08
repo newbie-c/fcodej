@@ -11,4 +11,10 @@ $(function() {
     $('body').on('click', '#reg', reg);
     $('body').on('click', '#login', login);
   }
+  $(window).bind('hashchange', function() {
+    let crt = parseHash(window.location.hash, '#create-password');
+    if (crt) window.location.reload();
+  });
+  let crt = parseHash(window.location.hash, '#create-password');
+  if (crt) createPassword(crt, token);
 });
