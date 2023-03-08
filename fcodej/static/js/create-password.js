@@ -8,34 +8,18 @@ function createPassword(token, auth) {
     },
     success: function(data) {
       if (data.cu) {
-        let html = '<div id="ealert" ' +
-                     '   class="alert alert-danger to-be-hidden"</div>' +
-                     '  Вы авторизованы, действие невозможно, ' +
-                     '  нужно выйти повторить переход по ссылке.' +
-                     '</div>';
+        let html = Mustache.render($('#ealertt').html(), data);
         $('#main-container').append(html);
-        $('#ealert').siblings().each(function() {
-          $(this).slideUp('slow', function() { $(this).remove(); });
-        });
-        $('#ealert').slideDown('slow');
+        slidePage('#ealert');
       } else {
         if (!data.aid) {
-          let html = '<div id="ealert" ' +
-                     '     class="alert alert-danger to-be-hidden"</div>' +
-                     data.message +
-                     '</div>';
+          let html = Mustache.render($('#ealertt').html(), data);
           $('#main-container').append(html);
-          $('#ealert').siblings().each(function() {
-            $(this).slideUp('slow', function() { $(this).remove(); });
-          });
-          $('#ealert').slideDown('slow');
+          slidePage('#ealert');
         } else {
           let html = Mustache.render($('#crpt').html(), data);
           $('#main-container').append(html);
-          $('#crpf').siblings().each(function() {
-            $(this).slideUp('slow', function() { $(this).remove(); });
-          });
-          $('#crpf').slideDown('slow');
+          slidePage('#crpf');
         }
       }
     },

@@ -6,10 +6,7 @@ function login() {
       success: function(data) {
         let form = Mustache.render($('#logint').html(), data);
         $('#main-container').append(form);
-        $('#loginf').siblings().each(function() {
-          $(this).slideUp('slow', function() { $(this).remove(); });
-        });
-        $('#loginf').slideDown('slow');
+        slidePage('#loginf');
       },
       dataType: 'json'
     });

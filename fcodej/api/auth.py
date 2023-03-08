@@ -21,6 +21,8 @@ class CreatePassword(HTTPEndpoint):
         token = request.headers.get('x-reg-token')
         if cu:
             res['cu'] = cu
+            res['message'] = '''Вы авторизованы, действие невозможно,
+            нужно выйти и повторить переход по ссылке.'''
             return JSONResponse(res)
         acc = await check_token(request.app.config, token)
         if acc is None:
