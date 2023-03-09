@@ -1,11 +1,10 @@
 function showWindow() {
   let token = window.localStorage.getItem('token');
+  let tee = token ? {'x-auth-token': token} : {}
   $.ajax({
-    method: 'POST',
+    method: 'GET',
     url: '/api/index',
-    data: {
-      token: token
-    },
+    headers: tee,
     success: function(data) {
       if (!data.cu && token) {
         window.localStorage.removeItem('token');

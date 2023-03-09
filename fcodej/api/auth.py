@@ -13,7 +13,6 @@ from .tasks import change_pattern, rem_old_session, request_password
 from .tokens import check_token, create_login_token
 from .tools import fix_bad_token
 
-
 AUTHORIZED = '''Вы авторизованы, действие невозможно, нужно выйти и повторить
 переход по ссылке.'''
 

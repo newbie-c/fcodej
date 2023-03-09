@@ -11,9 +11,9 @@ from .redi import assign_cache
 
 
 class IndexPage(HTTPEndpoint):
-    async def post(self, request):
+    async def get(self, request):
         res = {'cu': None}
-        token = (await request.form()).get('token')
+        token = request.headers.get('x-auth-token')
         if token:
             res['cu'] = await checkcu(request, token)
             if res.get('cu'):
