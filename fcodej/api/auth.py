@@ -11,6 +11,43 @@ from .pg import check_address, filter_user
 from .redi import assign_uid, extract_cache
 from .tasks import change_pattern, rem_old_session, request_password
 from .tokens import check_token, create_login_token
+from .tools import fix_bad_token
+
+
+AUTHORIZED = '''Вы авторизованы, действие невозможно, нужно выйти и повторить
+переход по ссылке.'''
+
+
+class ResetPassword(HTTPEndpoint):
+    async def get(self, request):
+        res = {'cu': None, 'aid': None}
+        auth = request.headers.get('x-auth-token')
+        cu = await checkcu(request, auth)
+        if cu:
+            res['cu'] = cu
+            res['message'] = AUTHORIZED
+            return JSONResponse(res)
+        token = request.headers.get('x-reg-token')
+        acc = await check_token(request.app.config, token)
+        if acc is None:
+            res['message'] = await fix_bad_token(request.app.config)
+            return JSONResponse(res)
+        conn = await get_conn(request.app.config)
+        acc = await conn.fetchrow(
+            '''SELECT accounts.id, accounts.user_id, accounts.requested,
+                      accounts.swap, users.username, users.last_visit
+                 FROM accounts, users
+                 WHERE accounts.id = $1 AND accounts.user_id = users.id''',
+            acc.get('aid'))
+        await conn.close()
+        if acc is None or acc.get('user_id') is None \
+                or acc.get('last_visit') > acc.get('requested') \
+                or acc.get('swap'):
+            res['message'] = 'Действие невозможно, брелок под сомнением.'
+            return JSONResponse(res)
+        res['aid'] = acc.get('id')
+        res['username'] = acc.get('username')
+        return JSONResponse(res)
 
 
 class CreatePassword(HTTPEndpoint):
@@ -18,17 +55,14 @@ class CreatePassword(HTTPEndpoint):
         res = {'cu': None, 'aid': None}
         auth = request.headers.get('x-auth-token')
         cu = await checkcu(request, auth)
-        token = request.headers.get('x-reg-token')
         if cu:
             res['cu'] = cu
-            res['message'] = '''Вы авторизованы, действие невозможно,
-            нужно выйти и повторить переход по ссылке.'''
+            res['message'] = AUTHORIZED
             return JSONResponse(res)
+        token = request.headers.get('x-reg-token')
         acc = await check_token(request.app.config, token)
         if acc is None:
-            length = request.app.config.get('TOKEN_LENGTH')
-            mes = f'Данные устарели, срок действия брелка {length} часов.'
-            res['message'] = mes
+            res['message'] = await fix_bad_token(request.app.config)
             return JSONResponse(res)
         conn = await get_conn(request.app.config)
         acc = await conn.fetchrow(

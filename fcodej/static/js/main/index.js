@@ -14,7 +14,11 @@ $(function() {
   $(window).bind('hashchange', function() {
     let crt = parseHash(window.location.hash, '#create-password');
     if (crt) window.location.reload();
+    let rst = parseHash(window.location.hash, '#reset-password');
+    if (rst) window.location.reload();
   });
   let crt = parseHash(window.location.hash, '#create-password');
   if (crt) createPassword(crt, token);
+  let rst = parseHash(window.location.hash, '#reset-password');
+  if (rst) resetPassword(rst, token);
 });

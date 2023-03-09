@@ -33,6 +33,80 @@
       <% message %>
     </div>
   </script>
+  <script id="rspt" type="text/template">
+    <div id="rspf" class="form-block content-block to-be-hidden">
+      <h3>Восстановите забытый пароль</h3>
+      <div class="today-field"></div>
+      <div class="form-help">
+        <p>
+          Уважаемый <% username %>, здесь Вы можете восстановить свой забытый
+          пароль, для этого заполните форму ниже. Введите в соответствующие
+          поля Ваш адрес электронной почты, на который Вы получили сообщение
+          со ссылкой на эту страницу, придумайте и введите новый пароль,
+          повторите его ввод в поле "Повторить" и нажмите кнопку "Обновить
+          пароль", будьте внимательны, после обновления пароля Вы сможете
+          войти в сервис только с новым паролем. Повторно запросить
+          восстановление пароля можно будет не ранее чем через {{ interval }}
+          часа.
+        </p>
+      </div>
+      <div class="form-form">
+        <form>
+          <div class="form-group">
+            <div class="form-label text-right">
+              <label for="rsaddress">Адрес эл.почты:</label>
+            </div>
+            <div class="form-input">
+              <input class="form-control"
+                     id="rsaddress"
+                     name="rsaddress"
+                     placeholder="введите свой адрес электронной почты"
+                     required
+                     type="text">
+            </div>
+            <div class="footer-bottom"></div>
+          </div>
+          <div class="form-group">
+            <div class="form-label text-right">
+              <label for="rspassword">Новый пароль:</label>
+            </div>
+            <div class="form-input">
+              <input class="form-control"
+                     id="rspassword"
+                     name="rspassword"
+                     placeholder="введите желаемый пароль"
+                     required
+                     type="text">
+            </div>
+            <div class="footer-bottom"></div>
+          </div>
+          <div class="form-group">
+            <div class="form-label text-right">
+              <label for="rsconfirm">Повторить:</label>
+            </div>
+            <div class="form-input">
+              <input class="form-control"
+                     id="rsconfirm"
+                     name="rsconfirm"
+                     placeholder="повторите пароль"
+                     required
+                     type="text">
+            </div>
+            <div class="footer-bottom"></div>
+          </div>
+          <div class="form-group">
+            <div class="form-input">
+              <button type="button"
+                      class="btn btn-primary btn-block"
+                      id="rsp-submit"
+                      name="rsp-submit"
+                      data-aid="<% aid %>">Обновить пароль</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </script>
   <script id="crpt" type="text/template">
     <div id="crpf" class="form-block content-block to-be-hidden">
       <h3>Создайте свой пароль</h3>
@@ -47,7 +121,7 @@
           точка), первый символ псевдонима должен быть латинской или русской
           буквой. Нажмите кнопку "Создать пароль". Будьте внимательны,
           псевдоним и пароль Вам потребуются для входа в сервис, а восстановить
-          пароль можно будет не ранее чем через {{ interval }} часов с момента
+          пароль можно будет не ранее чем через {{ interval }} часa с момента
           запроса регистрационной формы.
         </p>
       </div>
@@ -128,6 +202,7 @@
             'js/parse-hash.js',
             'js/slide-page.js',
             'js/create-password.js',
+            'js/reset-password.js',
             'js/show-window.js',
             'js/main/index.js' %}
     <script src="{{ ASSET_URL }}"></script>

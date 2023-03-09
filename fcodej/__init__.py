@@ -14,7 +14,8 @@ from starlette.templating import Jinja2Templates
 from webassets import Environment as AssetsEnvironment
 from webassets.ext.jinja2 import assets
 
-from .api.auth import CreatePassword, GetPassword, Login, Logout
+from .api.auth import (
+    CreatePassword, GetPassword, Login, Logout, ResetPassword)
 from .api.main import Captcha, IndexPage
 from .ava.views import show_avatar
 from .auth.attri import groups, permissions
@@ -73,7 +74,8 @@ app = Starlette(
                 Route('/login', Login, name='alogin'),
                 Route('/logout', Logout, name='alogout'),
                 Route('/get-password', GetPassword, name='areg'),
-                Route('/create-password', CreatePassword, name='crp')]),
+                Route('/create-password', CreatePassword, name='crp'),
+                Route('/reset-password', ResetPassword, name='rsp')]),
             Mount('/ava', name='ava', routes=[
                 Route('/{hash}/{size:int}', show_avatar, name='avatar')]),
             Mount('/captcha', name='captcha', routes=[
