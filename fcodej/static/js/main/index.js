@@ -10,6 +10,7 @@ $(function() {
     $('body').on('click', '#login-reg', loginReg);
     $('body').on('click', '#reg', reg);
     $('body').on('click', '#login', login);
+    $('body').on('click', '#crp-submit', createUser);
   }
   $(window).bind('hashchange', function() {
     let crt = parseHash(window.location.hash, '#create-password');
