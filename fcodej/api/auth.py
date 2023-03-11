@@ -1,6 +1,8 @@
 import asyncio
 import re
 
+from datetime import datetime
+
 from passlib.hash import pbkdf2_sha256
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import JSONResponse
@@ -51,6 +53,39 @@ class ResetPassword(HTTPEndpoint):
         res['username'] = acc.get('username')
         return JSONResponse(res)
 
+    async def post(self, request):
+        res = {'done': 0}
+        d = await request.form()
+        address, passwd, confirma, aid = (
+            d.get('address'), d.get('passwd'),
+            d.get('confirma'), d.get('aid'))
+        if not all((address, passwd, confirma, aid)):
+            res['message'] = 'Нужно заполнить все поля формы.'
+            return JSONResponse(res)
+        if passwd != confirma:
+            res['message'] = 'Пароли не совпадают.'
+            return JSONResponse(res)
+        conn = await get_conn(request.app.config)
+        acc = await conn.fetchrow(
+            '''SELECT a.id, a.address, a.user_id, u.username
+                 FROM accounts AS a, users AS u
+                 WHERE a.user_id = u.id AND a.id = $1''',
+            int(aid))
+        if acc.get('address') != address or acc.get('user_id') is None:
+            res['message'] = 'Действие невозможно, неверный запрос.'
+            await conn.close()
+            return JSONResponse(res)
+        await conn.execute(
+            '''UPDATE users SET password_hash = $1, last_visit = $2
+                 WHERE id = $3''',
+            pbkdf2_sha256.hash(passwd), datetime.utcnow(), acc.get('user_id'))
+        res['done'] = 1
+        await conn.close()
+        await set_flashed(
+                request,
+                f'Уважаемый {acc.get("username")}, у Вас новый пароль.')
+        return JSONResponse(res)
+
 
 class CreatePassword(HTTPEndpoint):
     async def get(self, request):
@@ -86,6 +121,9 @@ class CreatePassword(HTTPEndpoint):
         username, passwd, confirmation, aid = (
             d.get('username'), d.get('passwd'),
             d.get('confirma'), d.get('aid'))
+        if not all((username, passwd, confirmation, aid)):
+            res['message'] = 'Нужно заполнить все поля формы.'
+            return JSONResponse(res)
         p = re.compile(r'^[A-ZА-ЯЁa-zа-яё][A-ZА-ЯЁa-zа-яё0-9\-_.]{2,15}$')
         if not p.match(username):
             res['message'] = '''Псевдоним должен быть от 3 до 16 символов

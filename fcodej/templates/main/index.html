@@ -61,6 +61,7 @@
                      id="rsaddress"
                      name="rsaddress"
                      placeholder="введите свой адрес электронной почты"
+                     autocomplete="username"
                      required
                      type="text">
             </div>
@@ -75,6 +76,7 @@
                      id="rspassword"
                      name="rspassword"
                      placeholder="введите желаемый пароль"
+                     autocomplete="new-password"
                      required
                      type="password">
             </div>
@@ -89,6 +91,7 @@
                      id="rsconfirm"
                      name="rsconfirm"
                      placeholder="повторите пароль"
+                     autocomplete="new-password"
                      required
                      type="password">
             </div>
@@ -207,6 +210,8 @@
             'js/create-password.js',
             'js/create-user.js',
             'js/reset-password.js',
+            'js/restore-password.js',
+            'js/show-error.js',
             'js/show-window.js',
             'js/main/index.js' %}
     <script src="{{ ASSET_URL }}"></script>
