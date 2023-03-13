@@ -3,7 +3,36 @@ from hashlib import md5
 
 from validate_email import validate_email
 
-from ..auth.attri import permissions
+from ..auth.attri import get_group, permissions
+
+
+async def filter_target_user(request, conn, username):
+    query = await conn.fetchrow(
+        '''SELECT users.id AS uid,
+                  users.username AS username,
+                  users.registered AS registered,
+                  users.last_visit AS last_visit,
+                  users.permissions AS permissions,
+                  users.description AS description,
+                  users.last_published AS last_pub,
+                  accounts.address AS address,
+                  accounts.ava_hash AS ava_hash
+             FROM users, accounts WHERE users.username = $1
+               AND users.id = accounts.user_id''',
+        username)
+    if query:
+        return {'uid': query.get('uid'),
+                'username': query.get('username'),
+                'group': await get_group(query.get('permissions')),
+                'registered': f'{query.get("registered").isoformat()}Z',
+                'last_visit': f'{query.get("last_visit").isoformat()}Z',
+                'permissions': query.get('permissions'),
+                'description': query.get('description'),
+                'last_pub': f'{query.get("last_pub").isoformat()}Z'
+                if query.get('last_pub') else None,
+                'address': query.get('address'),
+                'ava': request.url_for(
+                    'ava:avatar', hash=query.get('ava_hash'), size=160)}
 
 
 async def define_a(conn, account):

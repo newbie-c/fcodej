@@ -13,6 +13,8 @@
             'css/content-block.css',
             'css/labeled-form.css',
             'css/captcha.css',
+            'css/avatar.css',
+            'css/profile.css',
             'css/main/index.css' %}
     <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
   {% endassets %}
@@ -21,7 +23,7 @@
 {% block templates %}
   {{ super() }}
   <script id="indext" type="text/template">
-    <div class="idef alert alert-warning">
+    <div id="idef" class="alert alert-warning">
       <div class="today-field"></div>
       <div class="message-text">
         Сайт в стадии разработки, попробуйте зайти позже.
@@ -31,6 +33,41 @@
   <script id="ealertt" type="text/template">
     <div id="ealert" class="alert alert-danger to-be-hidden">
       <% message %>
+    </div>
+  </script>
+  <script id="profilet" type="text/template">
+    <div id="profile" class="to-be-hidden">
+      <div class="content-block">
+        <div class="block-header">
+          <h3 class="panel-title">Профиль <% user.username %></h3>
+        </div>
+      </div>
+      <div class="content-block next-block">
+        <div class="user-avatar avatar"
+             style="background:url(<% user.ava %>)"></div>
+        <div class="user-info">
+          <h3><% user.username %></h3>
+          <div class="personal-details">
+            <table class="user-info-table">
+              <tbody>
+              <tr>
+                <td>Группа:&nbsp;</td>
+                <td><% user.group %></td>
+              </tr>
+              <tr>
+                <td>Зарегистрирован:&nbsp;</td>
+                <td class="date-field"><% user.registered %></td>
+              </tr>
+              <tr>
+                <td>Последний визит:&nbsp;</td>
+                <td class="last-seen"><% user.last_visit %></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="footer-bottom"></div>
+      </div>
     </div>
   </script>
   <script id="rspt" type="text/template">
@@ -213,6 +250,7 @@
             'js/restore-password.js',
             'js/show-error.js',
             'js/show-window.js',
+            'js/show-profile.js',
             'js/main/index.js' %}
     <script src="{{ ASSET_URL }}"></script>
   {% endassets %}

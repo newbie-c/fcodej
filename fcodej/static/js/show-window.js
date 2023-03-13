@@ -1,6 +1,6 @@
 function showWindow() {
   let token = window.localStorage.getItem('token');
-  let tee = token ? {'x-auth-token': token} : {}
+  let tee = token ? {'x-auth-token': token} : {};
   $.ajax({
     method: 'GET',
     url: '/api/index',

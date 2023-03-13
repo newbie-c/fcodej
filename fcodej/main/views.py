@@ -7,7 +7,7 @@ from ..common.flashed import get_flashed, set_flashed
 
 
 async def show_index(request):
-    interval = request.app.config.get('REQUEST_INTERVAL', cast=int)
+    interval = request.app.config.get('REQUEST_INTERVAL', cast=float)
     html = minify(
         request.app.jinja.get_template(
             'main/index.html').render(

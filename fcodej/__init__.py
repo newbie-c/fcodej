@@ -16,7 +16,7 @@ from webassets.ext.jinja2 import assets
 
 from .api.auth import (
     CreatePassword, GetPassword, Login, Logout, ResetPassword)
-from .api.main import Captcha, IndexPage
+from .api.main import Captcha, IndexPage, Profile
 from .ava.views import show_avatar
 from .auth.attri import groups, permissions
 from .captcha.views import show_captcha
@@ -75,7 +75,8 @@ app = Starlette(
                 Route('/logout', Logout, name='alogout'),
                 Route('/get-password', GetPassword, name='areg'),
                 Route('/create-password', CreatePassword, name='crp'),
-                Route('/reset-password', ResetPassword, name='rsp')]),
+                Route('/reset-password', ResetPassword, name='rsp'),
+                Route('/profile', Profile, name='user-profile')]),
             Mount('/ava', name='ava', routes=[
                 Route('/{hash}/{size:int}', show_avatar, name='avatar')]),
             Mount('/captcha', name='captcha', routes=[

@@ -9,3 +9,13 @@
   margin: 0 0 4px 0;
   font-size: 1.3em;
 }
+
+.block-header {
+  margin: 0;
+  padding: 0;
+}
+
+.block-header h3 {
+  margin: 0;
+  font-size: 1.1em;
+}

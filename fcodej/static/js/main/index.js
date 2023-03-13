@@ -13,14 +13,30 @@ $(function() {
     $('body').on('click', '#crp-submit', createUser);
     $('body').on('click', '#rsp-submit', restorePassword);
   }
-  $(window).bind('hashchange', function() {
+  $(window).bind('hashchange', {token: token}, function(event) {
     let crt = parseHash(window.location.hash, '#create-password');
-    if (crt) window.location.reload();
+    if (crt) {
+      createPassword(crt, event.data.token);
+    }
     let rst = parseHash(window.location.hash, '#reset-password');
-    if (rst) window.location.reload();
+    if (rst) {
+      resetPassword(rst, event.data.token);
+    }
+    let prof = parseHash(window.location.hash, '#profile');
+    if (prof) {
+      showProfile(prof, event.data.token);
+    }
   });
   let crt = parseHash(window.location.hash, '#create-password');
-  if (crt) createPassword(crt, token);
+  if (crt) {
+    createPassword(crt, token);
+  }
   let rst = parseHash(window.location.hash, '#reset-password');
-  if (rst) resetPassword(rst, token);
+  if (rst) {
+    resetPassword(rst, token);
+  }
+  let prof = parseHash(window.location.hash, '#profile');
+  if (prof) {
+    showProfile(prof, token);
+  }
 });
