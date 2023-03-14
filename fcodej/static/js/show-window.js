@@ -10,7 +10,6 @@ function showWindow() {
         window.localStorage.removeItem('token');
         window.location.reload();
       }
-      data.menu = adjustMenu(data);
       let dt = luxon.DateTime.now();
       data.year = dt.year;
       let html = Mustache.render($('#baset').html(), data);

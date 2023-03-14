@@ -1,6 +1,14 @@
 from ..auth.attri import groups, permissions
 
 
+async def render_menu(request, data):
+    menu = {'cu': bool(data['cu']),
+            'priv': permissions.SEND_PM in data['cu']['permissions'],
+            'profile': "{0}#profile/{1}".format(
+        request.app.url_path_for('index'), data['cu']['username'])}
+    data['menu'] = menu
+
+
 async def check_profile_permissions(cu, user, data):
     data['owner'] = cu['id'] == user['uid']
     data['address'] = cu['id'] == user['uid'] or \

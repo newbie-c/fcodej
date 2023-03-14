@@ -9,7 +9,7 @@ from ..auth.cu import checkcu
 from ..common.pg import get_conn
 from .redi import assign_cache
 from .pg import filter_target_user
-from .tools import check_profile_permissions
+from .tools import check_profile_permissions, render_menu
 
 
 class Profile(HTTPEndpoint):
@@ -44,8 +44,7 @@ class IndexPage(HTTPEndpoint):
         if token:
             res['cu'] = await checkcu(request, token)
             if res.get('cu'):
-                res['permissions'] = {name: permission for name, permission
-                in zip(permissions._fields, permissions)}
+                await render_menu(request, res)
         return JSONResponse(res)
 
 
