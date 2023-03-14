@@ -1,3 +1,16 @@
+from ..auth.attri import groups, permissions
+
+
+async def check_profile_permissions(cu, user, data):
+    data['owner'] = cu['id'] == user['uid']
+    data['address'] = cu['id'] == user['uid'] or \
+            (permissions.ADMINISTER_SERVICE in cu['permissions']
+             or  cu['group'] == groups.keeper or
+             (permissions.CHANGE_USER_ROLE in cu['permissions']
+              and user['group'] != groups.keeper and
+              user['group'] != groups.root))
+
+
 async def fix_bad_token(config):
     length = config.get('TOKEN_LENGTH')
     return f'Данные устарели, срок действия брелка {length} часов.'

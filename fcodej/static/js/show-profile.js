@@ -14,9 +14,22 @@ function showProfile(username, token) {
         $('#main-container').append(html);
         slidePage('#ealert');
       } else {
-        let html = Mustache.render($('#profilet').html(), data);
-        $('#main-container').append(html);
-        slidePage('#profile');
+        if ($('#profile').length) {
+          $('#profile').slideUp('slow', function() {
+            $('#profile').remove();
+            let html = Mustache.render($('#profilet').html(), data);
+            $('#main-container').append(html);
+            formatDateTime($('#profile .date-field'));
+            renderLastSeen($('#profile .last-seen'));
+            $('#profile').slideDown('slow');
+          });
+        } else {
+          let html = Mustache.render($('#profilet').html(), data);
+          $('#main-container').append(html);
+          formatDateTime($('#profile .date-field'));
+          renderLastSeen($('#profile .last-seen'));
+          slidePage('#profile');
+        }
       }
     },
     dataType: 'json'

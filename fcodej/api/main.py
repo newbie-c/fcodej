@@ -9,6 +9,7 @@ from ..auth.cu import checkcu
 from ..common.pg import get_conn
 from .redi import assign_cache
 from .pg import filter_target_user
+from .tools import check_profile_permissions
 
 
 class Profile(HTTPEndpoint):
@@ -31,6 +32,7 @@ class Profile(HTTPEndpoint):
                 res['message'] = 'Для вас доступ закрыт, увы.'
                 return JSONResponse(res)
             res['cu'], res['user'] = cu, target
+            await check_profile_permissions(cu, target, res)
             return JSONResponse(res)
         return JSONResponse(res)
 

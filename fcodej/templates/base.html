@@ -64,14 +64,14 @@
        class="current-user-name"><% cu.username %></span><b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
+              <li>
+                <a href="<% menu.profile %>">Профиль</a>
+              </li>
               <% #menu.priv %>
                 <li>
-                  <a href="<% menu.profile %>">Профиль</a>
+                  <a href="/">Приваты</a>
                 </li>
               <% /menu.priv %>
-              <li>
-                <a href="/">Приваты</a>
-              </li>
               <li role="separator" class="divider"></li>
               <li>
                 <a id="logout" href="/#logout">Выйти</a>

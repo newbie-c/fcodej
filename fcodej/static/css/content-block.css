@@ -19,3 +19,7 @@
   margin: 0;
   font-size: 1.1em;
 }
+
+.block-body {
+  margin: 6px 0 0;
+}
